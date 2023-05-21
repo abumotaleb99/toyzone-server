@@ -40,12 +40,22 @@ async function run() {
     });
 
     app.get("/my-toys/:email", async (req, res) => {
-      const jobs = await toyCollection
+      const toys = await toyCollection
         .find({
           sellerEmail: req.params.email,
         })
         .toArray();
-      res.send(jobs);
+      res.send(toys);
+    });
+
+    app.get("/getToysBySearch/:text", async (req, res) => {
+      const text = req.params.text;
+      const result = await toyCollection
+        .find({
+          toyName: { $regex: text, $options: "i" },
+        })
+        .toArray();
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
