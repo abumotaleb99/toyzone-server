@@ -58,6 +58,37 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/toy/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await toyCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.put("/toy/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const UpdatedToy = req.body;
+
+      const coffee = {
+        $set: {
+          toyName: UpdatedToy.toyName,
+          sellerName: UpdatedToy.sellerName,
+          sellerEmail: UpdatedToy.sellerEmail,
+          subcategory: UpdatedToy.subcategory,
+          price: UpdatedToy.price,
+          rating: UpdatedToy.rating,
+          quantity: UpdatedToy.quantity,
+          photoUrl: UpdatedToy.photoUrl,
+          description: UpdatedToy.description,
+        },
+      };
+
+      const result = await toyCollection.updateOne(filter, coffee, options);
+      res.send(result);
+    });
+
     app.delete("/toy/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
