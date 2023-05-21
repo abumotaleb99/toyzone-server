@@ -48,6 +48,26 @@ async function run() {
       res.send(toys);
     });
 
+    app.get("/allToysByCategory/:category", async (req, res) => {
+      const category = req.params.category;
+      if (
+        category == "Car" ||
+        category == "Truck" ||
+        category == "Racing Car"
+      ) {
+        const toys = await toyCollection
+          .find({
+            subcategory: category,
+          })
+          .limit(4)
+          .toArray();
+
+        return res.send(toys);
+      }
+      const toys = await toyCollection.find({}).limit(4).toArray();
+      res.send(toys);
+    });
+
     app.get("/getToysBySearch/:text", async (req, res) => {
       const text = req.params.text;
       const result = await toyCollection
